@@ -34,9 +34,9 @@ function listen(phrase) {
   light(LED1, 1);
   console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
-      //console.log("Response from Wit for text input: ");
-      if (err) console.log("Error: ", err);
-      //console.log(JSON.stringify(res, null, " "));
+      console.log("Response from Wit for text input: ");
+      if (err) console.log("Wit.AI error: ", err);
+      console.log(JSON.stringify(res, null, " "));
       processWit(res);
   });
   light(LED1, 1);
@@ -45,6 +45,8 @@ function listen(phrase) {
 
 /* Called when wit data is back. */
 function processWit(response) {
+
+    console.log("prcoess wit called")
 
     // find max confidence, use that intent.
     var maxConf = 0;
@@ -108,9 +110,9 @@ app.get('/light', function (req, res) {
 
 app.post('/listen', function (req, res) {
     'use strict';
-    
+
+    console.log("req.body %j", req.body);
     var phrase = req.body['phrase'];
-    
     if (phrase == undefined) { 
         console.log("undefined phrase for query %j", req.body);
         res.send('Error parsing phrase');
