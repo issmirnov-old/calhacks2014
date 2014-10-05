@@ -52,26 +52,15 @@ app.get('/light', function (req, res) {
 
 app.post('/listen', function (req, res) {
     'use strict';
-
-    var debug = url.parse(request.url, true)['phrase'];
-    console.log("phrase: " + phrase);
-    var body = '';
-    req.on('data', function (data) {
-    body += data;
-
-    // Too much POST data, kill the connection!
-    if (body.length > 1e6)
-        req.connection.destroy();
-    });
-    req.on('end', function () {
-        var phrase = JSON.parse(body)['phrase'];
+    
+    
+    var phrase = url.parse(req.url, true)['query']['phrase'];
         if (phrase != undefined) { 
-            console.log("phrase:" + phrase);
-            listen(phrase);
-        } else {
-            console.log("undefined phrase");
-        }
-    });
+        console.log("phrase:" + phrase);
+        listen(phrase);
+    } else {
+        console.log("undefined phrase");
+    }
     res.send("done with listen");
 });
 
