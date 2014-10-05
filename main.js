@@ -1,17 +1,13 @@
 /*jslint node:true,vars:true */
 /*global mraa */
 
-var sleep = require('sleep');
 var LED1 = 13;
+var sleep = require('sleep');
+var querystring = require('querystring');
+var wit = require('node-wit');
+var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
 
-var Lcd = require('lcd'),
-  lcd = new Lcd({rs:27, e:65, data:[23, 26, 46, 47], cols:16, rows:2});
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//GROVE Kit Shield D6 --> GPIO6
-//GROVE Kit Shield D2 --> GPIO2
 function light(LED, duration) {
     'use strict';
     //light connected to D13
@@ -23,8 +19,18 @@ function light(LED, duration) {
     sleep.sleep(duration);
     digital_pin_D.write(0);
     console.log("Light OFF!!!");
+}
 
 
+function listen(phrase) {
+  light(LED1, 1);
+  console.log("Sending text to Wit.AI");
+  wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
+      console.log("Response from Wit for text input: ");
+      if (err) console.log("Error: ", err);
+      console.log(JSON.stringify(res, null, " "));
+  });
+  light(LED1, 1);
 }
 
 var app = require('express')();
@@ -43,21 +49,22 @@ app.get('/light', function (req, res) {
 });
 
 
+app.get('/listen', function (req, res) {
+    'use strict';
+    console.log("requst: " + req)
+    var phrase = querystring.parse(req)["phrase"];
+    console.log("phrase:" + phrase)
+    listen(phrase);
+    res.send('sent ' + phrase + ' to wit');
+});
+
+
 http.listen(8080, function () {
     'use strict';
     console.log('listening on *:8080');
 });
 
 
-// LCD work
-
-lcd.on('ready', function () {
-  setInterval(function () {
-    console.log("lcd updating");
-    lcd.setCursor(0, 0);
-    lcd.print(new Date().toISOString().substring(11, 19));
-  }, 1000);
-});
 
 
 //MRAA Library was installed on the board directly through ssh session
