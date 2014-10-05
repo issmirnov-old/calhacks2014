@@ -8,6 +8,9 @@ var url = require("url");
 var wit = require('node-wit');
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
+// Various power relays
+var MUSIC_RELAY = 13; // should be 4
+
 
 function light(LED, duration) {
     'use strict';
@@ -27,9 +30,9 @@ function listen(phrase) {
   light(LED1, 1);
   console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
-      console.log("Response from Wit for text input: ");
+      //console.log("Response from Wit for text input: ");
       if (err) console.log("Error: ", err);
-      console.log(JSON.stringify(res, null, " "));
+      //console.log(JSON.stringify(res, null, " "));
       processWit(res);
   });
   light(LED1, 1);
@@ -38,9 +41,42 @@ function listen(phrase) {
 
 /* Called when wit data is back. */
 function processWit(response) {
-    var intent = response['outcomes']['intent'];
-    var confidence = response['outcomes']['confidence'];
-    console.log("intent: %s, confidence: %s", intent, confidence);
+
+    // find max confidence, use that intent.
+    var maxConf = 0;
+    var bestIntent = "";
+    for (i = 0; i < response['outcomes'].length; i++) {
+        var outcome = response['outcomes'][i];
+        var intent = outcome['intent'];
+        var confidence = outcome['confidence'];
+        if (confidence > maxConf) {
+            var maxConf = confidence;
+            var bestIntent = intent;
+        }
+    }
+    
+    // debug
+    console.log("intent: %s, confidence: %s", bestIntent, maxConf);
+    
+    // Decide what to do
+    switch (bestIntent) {
+        case "music_on":
+            // Enable relay that does music
+            console.log("enabling music relay");
+            var digital_pin = new mraa.Gpio(MUSIC_RELAY);
+            digital_pin.dir(mraa.DIR_OUT);
+            digital_pin.write(1);   
+            break;  
+        case "music_off":
+            // Enable relay that does music
+            console.log("disabling music relay");
+            var digital_pin = new mraa.Gpio(MUSIC_RELAY);
+            digital_pin.dir(mraa.DIR_OUT);
+            digital_pin.write(0);   
+            break;   
+        
+    }
+
 }
 
 
