@@ -110,10 +110,11 @@ app.post('/listen', function (req, res) {
     } 
 });
 
+var PORT = 80;
 
-http.listen(8080, function () {
+http.listen(PORT, function () {
     'use strict';
-    console.log('listening on *:8080');
+    console.log('listening on *:%d', PORT);
 });
 
 
