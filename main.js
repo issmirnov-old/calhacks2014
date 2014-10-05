@@ -4,6 +4,11 @@
 var sleep = require('sleep');
 var LED1 = 13;
 
+
+var Lcd = require('lcd'),
+  lcd = new Lcd({rs:27, e:65, data:[23, 26, 46, 47], cols:16, rows:2});
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GROVE Kit Shield D6 --> GPIO6
 //GROVE Kit Shield D2 --> GPIO2
@@ -42,6 +47,18 @@ http.listen(8080, function () {
     'use strict';
     console.log('listening on *:8080');
 });
+
+
+// LCD work
+
+lcd.on('ready', function () {
+  setInterval(function () {
+    console.log("lcd updating");
+    lcd.setCursor(0, 0);
+    lcd.print(new Date().toISOString().substring(11, 19));
+  }, 1000);
+});
+
 
 //MRAA Library was installed on the board directly through ssh session
 var mraa = require("mraa");

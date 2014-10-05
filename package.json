@@ -10,6 +10,7 @@
       "express":"latest",
       "socket.io":"latest",
       "sleep":"latest",
-      "lcd":"latest"
+      "lcd":"latest",
+      "node-wit": "1.0.0"
   }
 }
