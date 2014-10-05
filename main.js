@@ -6,6 +6,10 @@ var sleep = require('sleep');
 var querystring = require('querystring');
 var url = require("url");
 var wit = require('node-wit');
+var express = require('express');
+var bodyParser = require('body-parser')
+
+ 
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
 // Various power relays
@@ -80,9 +84,15 @@ function processWit(response) {
 }
 
 
-var app = require('express')();
+var app = express();
+app.use(bodyParser.json())
+
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+
+
+
+
+
 
 app.get('/', function (req, res) {
     'use strict';
@@ -98,11 +108,11 @@ app.get('/light', function (req, res) {
 
 app.post('/listen', function (req, res) {
     'use strict';
-    var phrase = url.parse(req.url, true)['query']['phrase'];
     
-    console.log("req.url: " + req.url);
+    var phrase = req.body['phrase'];
+    
     if (phrase == undefined) { 
-        console.log("undefined phrase for query %j, url: %s", url.parse(req.url, true)['query'] , req.url);
+        console.log("undefined phrase for query %j", req.body);
         res.send('Error parsing phrase');
     } else {
         console.log("phrase:" + phrase);
