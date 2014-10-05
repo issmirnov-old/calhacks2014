@@ -25,7 +25,7 @@ function light(LED, duration) {
 
 function listen(phrase) {
   light(LED1, 1);
-  console.log("Sending text to Wit.AI");
+  console.log("Sending phrase: " + phrase + " to Wit.AI");
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
       console.log("Response from Wit for text input: ");
       if (err) console.log("Error: ", err);
@@ -52,7 +52,9 @@ app.get('/light', function (req, res) {
 
 app.post('/listen', function (req, res) {
     'use strict';
- 
+
+    var debug = url.parse(request.url, true)['phrase'];
+    console.log("phrase: " + phrase);
     var body = '';
     req.on('data', function (data) {
     body += data;
@@ -65,32 +67,12 @@ app.post('/listen', function (req, res) {
         var phrase = JSON.parse(body)['phrase'];
         if (phrase != undefined) { 
             console.log("phrase:" + phrase);
-            // res.send('sent ' + phrase + ' to wit');
+            listen(phrase);
         } else {
             console.log("undefined phrase");
         }
     });
- 
-   
-
-/*
- // parses the request url
-        var theUrl = url.parse( req.url );
-
-        // gets the query part of the URL and parses it creating an object
-        var queryObj = queryString.parse( theUrl.query );
-
-        // queryObj will contain the data of the query as an object
-        // and jsonData will be a property of it
-        // so, using JSON.parse will parse the jsonData to create an object
-        var obj = JSON.parse( queryObj.jsonData );
-
-        // as the object is created, the live below will print "bar"
-        console.log( obj.foo );
-*/
-
-   //  listen(phrase);
-    res.send("done with /listen");
+    res.send("done with listen");
 });
 
 
