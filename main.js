@@ -25,7 +25,7 @@ function light(LED, duration) {
 
 function listen(phrase) {
   light(LED1, 1);
-  console.log("Sending phrase: " + phrase + " to Wit.AI");
+  console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
       console.log("Response from Wit for text input: ");
       if (err) console.log("Error: ", err);
@@ -52,16 +52,18 @@ app.get('/light', function (req, res) {
 
 app.post('/listen', function (req, res) {
     'use strict';
-    
-    
     var phrase = url.parse(req.url, true)['query']['phrase'];
-        if (phrase != undefined) { 
-        console.log("phrase:" + phrase);
-        listen(phrase);
-    } else {
+    if (phrase == undefined) { 
         console.log("undefined phrase");
-    }
-    res.send("done with listen");
+        res.send('Error parsing phrase');
+    } else {
+        console.log("phrase:" + phrase);
+        var witData = listen(phrase);
+        //var intent = witData['outcomes']['intent'];
+        //var confidence = witData['outcomes']['confidence'];
+        //console.log("intent: %s, confidence: %s", intent, confidence);
+        
+    } 
 });
 
 
