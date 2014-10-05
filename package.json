@@ -11,6 +11,7 @@
       "socket.io":"latest",
       "sleep":"latest",
       "lcd":"latest",
+      "fs": "1.0.0",
       "node-wit": "1.0.0"
   }
 }
