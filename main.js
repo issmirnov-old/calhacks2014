@@ -1,25 +1,43 @@
-/*jslint node:true,vars:true */
-/*global mraa */
+/*
+    Author: Ivan Smirnov, isgsmirnov@gmail.com (http://ivansmirnov.name) 
+    
+*/
 
-var LED1 = 13;
+
+// ======================== START VARIABLES ============================ // 
+
+// Nodejs includes
 var sleep = require('sleep');
 var querystring = require('querystring');
 var url = require("url");
 var wit = require('node-wit');
 var express = require('express');
 var bodyParser = require('body-parser')
+var mraa = require("mraa");
 
- 
+// Wit.AI Access token
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
 // Various power relays
-var MUSIC_RELAY = 4; // should be 4
+var MUSIC_RELAY = 4;
+var LIGHT_RELAY = 5;
+
+// Debug lights
+var LED1 = 13;
+
+// Server port.
+var PORT = 80;
 
 
+// ======================== END VARIABLES ============================ // 
+
+
+
+
+
+// Helper function, does debug lighting.
 function light(LED, duration) {
     'use strict';
-    //light connected to D13
-    // buzzer on D6
     var digital_pin_D = new mraa.Gpio(LED);
     digital_pin_D.dir(mraa.DIR_OUT);
     digital_pin_D.write(1);
@@ -29,7 +47,7 @@ function light(LED, duration) {
     console.log("Light OFF!!!");
 }
 
-
+// Process phrase with wit.ai
 function listen(phrase) {
   light(LED1, 1);
   console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
@@ -46,7 +64,7 @@ function listen(phrase) {
 /* Called when wit data is back. */
 function processWit(response) {
 
-    console.log("prcoess wit called")
+    console.log("process wit called")
 
     // find max confidence, use that intent.
     var maxConf = 0;
@@ -80,25 +98,39 @@ function processWit(response) {
             digital_pin.dir(mraa.DIR_OUT);
             digital_pin.write(0);   
             break;   
+           l
+        case "light_on":
+            // Enable relay that does lights
+            console.log("disabling lights relay");
+            var digital_pin = new mraa.Gpio(LIGHT_RELAY);
+            digital_pin.dir(mraa.DIR_OUT);
+            digital_pin.write(0);   
+            break;   
+            
+        case "light_off":
+            // Enable relay that does lights
+            console.log("disabling lights relay");
+            var digital_pin = new mraa.Gpio(LIGHT_RELAY);
+            digital_pin.dir(mraa.DIR_OUT);
+            digital_pin.write(0);   
+            break;   
         
     }
 
 }
 
 
+
+
+// Create the app
 var app = express();
 app.use(bodyParser.json())
-
 var http = require('http').Server(app);
 
-
-
-
-
-
+// Declare endpoints
 app.get('/', function (req, res) {
     'use strict';
-    res.send('<h1>Hello world from Intel Edison</h1>');
+    res.send("<h1>Welcome to Ivan's home automation system!</h1><h3>Check out the /light (GET) and /listen (POST, json phrase:words) endpoints.</h3>");
 });
 
 app.get('/light', function (req, res) {
@@ -106,7 +138,6 @@ app.get('/light', function (req, res) {
     light(LED1, 1);
     res.send('lit diode for 1 second');
 });
-
 
 app.post('/listen', function (req, res) {
     'use strict';
@@ -122,15 +153,10 @@ app.post('/listen', function (req, res) {
     } 
 });
 
-var PORT = 80;
-
+// Start the server
 http.listen(PORT, function () {
     'use strict';
     console.log('listening on *:%d', PORT);
 });
 
 
-
-
-//MRAA Library was installed on the board directly through ssh session
-var mraa = require("mraa");
