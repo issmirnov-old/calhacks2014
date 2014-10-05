@@ -4,6 +4,7 @@
 var LED1 = 13;
 var sleep = require('sleep');
 var querystring = require('querystring');
+var url = require("url");
 var wit = require('node-wit');
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
@@ -49,41 +50,47 @@ app.get('/light', function (req, res) {
 });
 
 
-app.get('/listen', function (req, res) {
+app.post('/listen', function (req, res) {
     'use strict';
-    console.log("req: " + req)
+ 
+    var body = '';
+    req.on('data', function (data) {
+    body += data;
 
-    if (req.method == 'POST') {
-        var body = '';
-        req.on('data', function (data) {
-            body += data;
-
-            // Too much POST data, kill the connection!
-            if (body.length > 1e6)
-                req.connection.destroy();
-        });
-        req.on('end', function () {
-            var post = qs.parse(body);
-
-            // use post['blah'], etc.
-            var phrase = post['phrase'];
-
-             if (phrase != undefined) { 
-                     console.log("phrase:" + phrase);
-                        res.send('sent ' + phrase + ' to wit');
-                } else {
-                     console.log("undefined phrase");
-                }
-        });
-    }
+    // Too much POST data, kill the connection!
+    if (body.length > 1e6)
+        req.connection.destroy();
+    });
+    req.on('end', function () {
+        var phrase = JSON.parse(body)['phrase'];
+        if (phrase != undefined) { 
+            console.log("phrase:" + phrase);
+            // res.send('sent ' + phrase + ' to wit');
+        } else {
+            console.log("undefined phrase");
+        }
+    });
+ 
    
+
+/*
+ // parses the request url
+        var theUrl = url.parse( req.url );
+
+        // gets the query part of the URL and parses it creating an object
+        var queryObj = queryString.parse( theUrl.query );
+
+        // queryObj will contain the data of the query as an object
+        // and jsonData will be a property of it
+        // so, using JSON.parse will parse the jsonData to create an object
+        var obj = JSON.parse( queryObj.jsonData );
+
+        // as the object is created, the live below will print "bar"
+        console.log( obj.foo );
+*/
+
    //  listen(phrase);
-
-
-
-
-
-    
+    res.send("done with /listen");
 });
 
 
