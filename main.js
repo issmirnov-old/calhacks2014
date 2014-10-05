@@ -9,7 +9,7 @@ var wit = require('node-wit');
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
 // Various power relays
-var MUSIC_RELAY = 13; // should be 4
+var MUSIC_RELAY = 4; // should be 4
 
 
 function light(LED, duration) {
@@ -99,8 +99,10 @@ app.get('/light', function (req, res) {
 app.post('/listen', function (req, res) {
     'use strict';
     var phrase = url.parse(req.url, true)['query']['phrase'];
+    
+    console.log("req.url: " + req.url);
     if (phrase == undefined) { 
-        console.log("undefined phrase");
+        console.log("undefined phrase for query %j, url: %s", url.parse(req.url, true)['query'] , req.url);
         res.send('Error parsing phrase');
     } else {
         console.log("phrase:" + phrase);
