@@ -30,9 +30,19 @@ function listen(phrase) {
       console.log("Response from Wit for text input: ");
       if (err) console.log("Error: ", err);
       console.log(JSON.stringify(res, null, " "));
+      processWit(res);
   });
   light(LED1, 1);
 }
+
+
+/* Called when wit data is back. */
+function processWit(response) {
+    var intent = response['outcomes']['intent'];
+    var confidence = response['outcomes']['confidence'];
+    console.log("intent: %s, confidence: %s", intent, confidence);
+}
+
 
 var app = require('express')();
 var http = require('http').Server(app);
@@ -58,11 +68,7 @@ app.post('/listen', function (req, res) {
         res.send('Error parsing phrase');
     } else {
         console.log("phrase:" + phrase);
-        var witData = listen(phrase);
-        //var intent = witData['outcomes']['intent'];
-        //var confidence = witData['outcomes']['confidence'];
-        //console.log("intent: %s, confidence: %s", intent, confidence);
-        
+        listen(phrase); 
     } 
 });
 
