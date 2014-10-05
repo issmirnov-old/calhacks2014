@@ -51,32 +51,39 @@ app.get('/light', function (req, res) {
 
 app.get('/listen', function (req, res) {
     'use strict';
-    console.log("requst: " + req)
+    console.log("req: " + req)
 
-    // parses the request url
-    var theUrl = url.parse( req.url );
+    if (req.method == 'POST') {
+        var body = '';
+        req.on('data', function (data) {
+            body += data;
 
-    // gets the query part of the URL and parses it creating an object
-    var queryObj = queryString.parse( theUrl.query );
+            // Too much POST data, kill the connection!
+            if (body.length > 1e6)
+                req.connection.destroy();
+        });
+        req.on('end', function () {
+            var post = qs.parse(body);
 
-    // queryObj will contain the data of the query as an object
-    // and jsonData will be a property of it
-    // so, using JSON.parse will parse the jsonData to create an object
-    var obj = JSON.parse( queryObj.jsonData );
+            // use post['blah'], etc.
+            var phrase = post['phrase'];
 
-    // as the object is created, the live below will print "bar"
-    console.log( obj.foo );
-
-
-    var phrase = querystring.parse(req)["phrase"];
-    console.log("phrase:" + phrase)
-    listen(phrase);
-
-
-
+             if (phrase != undefined) { 
+                     console.log("phrase:" + phrase);
+                        res.send('sent ' + phrase + ' to wit');
+                } else {
+                     console.log("undefined phrase");
+                }
+        });
+    }
+   
+   //  listen(phrase);
 
 
-    res.send('sent ' + phrase + ' to wit');
+
+
+
+    
 });
 
 
