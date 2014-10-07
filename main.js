@@ -52,10 +52,13 @@ function listen(phrase) {
   light(LED1, 1);
   console.log('Sending phrase: "'+ phrase +'" to Wit.AI');
   wit.captureTextIntent(ACCESS_TOKEN, phrase, function (err, res) {
-      console.log("Response from Wit for text input: ");
-      if (err) console.log("Wit.AI error: ", err);
-      console.log(JSON.stringify(res, null, " "));
-      processWit(res);
+      //console.log("Response from Wit for text input: ");
+      if (err) {
+        console.log("Wit.AI error: ", err);
+      } else {
+          console.log(JSON.stringify(res, null, " "));
+          processWit(res);
+      }
   });
   light(LED1, 1);
 }
