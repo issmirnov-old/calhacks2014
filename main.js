@@ -19,8 +19,8 @@ var mraa = require("mraa");
 var ACCESS_TOKEN = "47IN3P3XNWQ2IINXUIQIMKHFFOCA4APX";
 
 // Various power relays
-var MUSIC_RELAY = 4;
-var LIGHT_RELAY = 5;
+var LIGHT_RELAY = 4;
+var MUSIC_RELAY = 5;
 
 // Debug lights
 var LED1 = 13;
@@ -67,7 +67,12 @@ function listen(phrase) {
 /* Called when wit data is back. */
 function processWit(response) {
 
-    console.log("process wit called")
+    console.log("process wit called");
+    
+    if (response['outcomes'].length == 0) {
+        console.log("Invalid response from wit.");
+        return;
+    }
 
     // find max confidence, use that intent.
     var maxConf = 0;
@@ -104,10 +109,10 @@ function processWit(response) {
            
         case "light_on":
             // Enable relay that does lights
-            console.log("disabling lights relay");
+            console.log("enabling lights relay");
             var digital_pin = new mraa.Gpio(LIGHT_RELAY);
             digital_pin.dir(mraa.DIR_OUT);
-            digital_pin.write(0);   
+            digital_pin.write(1);   
             break;   
             
         case "light_off":
@@ -117,9 +122,7 @@ function processWit(response) {
             digital_pin.dir(mraa.DIR_OUT);
             digital_pin.write(0);   
             break;   
-        
     }
-
 }
 
 
