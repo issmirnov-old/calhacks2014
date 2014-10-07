@@ -98,7 +98,7 @@ function processWit(response) {
             digital_pin.dir(mraa.DIR_OUT);
             digital_pin.write(0);   
             break;   
-           l
+           
         case "light_on":
             // Enable relay that does lights
             console.log("disabling lights relay");

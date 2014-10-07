@@ -1,67 +1,33 @@
-Touch Notifier Node.js IoT App
-============================
-The Touch Notifier Node.js sample application distributed within Intel® XDK IoT Edition under the IoT with Node.js Projects project creation option showcases how to read digital data from a Grover Starter Kit Plus – IoT Intel® Edition Touch Sensor, start a web server and communicate wirelessly using WebSockets.
+# Jarvis
 
-Intel(R) XDK IoT Edition
--------------------------------------------
-This template is part of the Intel(R) XDK IoT Edition. 
-Download the Intel(R) XDK IoT Edition at https://software.intel.com/en-us/html5/xdk-iot. To see the technical details of the sample, 
-please visit the sample article page at https://software.intel.com/en-us/html5/articles/iot-touch-notifier-nodejs-and-html5-samples.
+## Installation
+
+1. Clone the repo
+2. Install mraa: `echo "src mraa-upm http://iotdk.intel.com/repos/1.1/intelgalactic" > /etc/opkg/mraa-upm.conf; opkg update; opkg install libmraa0`
+3. run npm install in the cloned folder
+4. run with `nodemon main.js localhost 80`
+
+Note - if port in use, disable default edison site. Last line in `/usr/lib/edison_config_tools/edison-config-server.js`
 
 
-Important App Files
----------------------------
-* main.js
-* package.json
-* icon.png
-* README.md
 
-License Information Follows
----------------------------
-Copyright (c) 2014, Intel Corporation. All rights reserved.
+## The Idea
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+I have long been fascinated with the concept of a smart, networked personal assistant. An ideal system would intelligently respond to non hard coded voice commands, understand what I want, and perform the action. I knew I would have to get my feet wet and dive into hardware for this one.
 
-- Redistributions of source code must retain the above copyright notice, 
-  this list of conditions and the following disclaimer.
+## The Challenge
 
-- Redistributions in binary form must reproduce the above copyright notice, 
-  this list of conditions and the following disclaimer in the documentation 
-  and/or other materials provided with the distribution.
+I've always been a software dev, experimenting with different parts of the stack, but never dropping down into hardware. As such, this was a challenging experience. All of my team mates had urgent work come up, so I worked alone. I had to learn how to use an intel Edison, teach myself NodeJS, and figure out how to network all the participating devices and parts to make it work.
 
-- Neither the name of Intel Corporation nor the names of its contributors 
-  may be used to endorse or promote products derived from this software 
-  without specific prior written permission.
+## The Implementation
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE 
-GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
-OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+The system works as follows: I speak into my Android Wear device (Moto 360), and that voice command eventually triggers a desired action. As of right now, this means controlling power to three 120v devices.
 
-mraa
---------------------------------------------
-* Included on the IoTDevkit Linux Image 
+### The Flow
 
-* source:  https://github.com/intel-iot-devkit/mraa
-* license:  https://github.com/intel-iot-devkit/mraa/blob/9d488c8e869e59e1dff2c68218a8f38e9b959cd7/cmake/modules/LICENSE_1_0.txt
-
-express
---------------------------------------------
-http://expressjs.com/
-
-* source: https://github.com/strongloop/express
-* license: https://github.com/strongloop/express/blob/master/LICENSE
-
-socket.io
---------------------------------------------
-http://socket.io/
-
-* source: https://github.com/Automattic/socket.io
-* license: https://github.com/Automattic/socket.io/blob/master/LICENSE
+1. I speak a phrase into my watch
+2. AutoVoice catches it and triggers a tasker Task
+3. Tasker initiates a HTTP POST to my node js server on the edison
+4. The edison takes the request and sends it to wit.ai for processing
+5. Once a result is back, the intent is extracted and a function called to process it
+6. Depending on the intent, a different relay is switched on or off, allowing control of a 120V device.

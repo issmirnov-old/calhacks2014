@@ -1,15 +1,15 @@
 {
-	"reponame":"iotapp-touch-notifier",
-	"title":"Touch Notifier",
-	"tooltip":"A simple node.js application intended to showcase how to read digital data from a Grove Starter Kit Plus IoT Intel Edition Touch Sensor, start a web server and communicate wirelessly using WebSockets. The HTML5 companion app is visible under App Developer Projects: Work with a Demo panel.",
-	"description":"A simple node.js application intended to showcase how to read digital data from a Grove Starter Kit Plus IoT Intel Edition Touch Sensor, start a web server and communicate wirelessly using WebSockets. The HTML5 companion app is visible under App Developer Projects: Work with a Demo panel.",
-	"articleurl":"https://software.intel.com/en-us/html5/articles/iot-touch-notifier-nodejs-and-html5-samples",
+	"reponame":"jarvis-home-automation",
+	"title":"Jarvis Home Automation",
+	"tooltip":"Node.js application for controlling a relay via an intel edison.",
+	"description":"Send a text phrase to via POST /LISTEN $json, and have the server intelligently execute the command.",
+	"articleurl":"http://blog.ivansmirnov.name/calhacks14",
     "screenshotUrl":"",
     "iconUrl":"",
 	"highlights":[""],
     "keywords":[""],
 	"visible": "true",
 	"apppreview":"false",
-	"appname":"demo.touchnotifier",
-	"relname":"4.0.0"
+	"appname":"com.smirnovlabs.jarvis",
+	"relname":"0.1.0"
 }

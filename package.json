@@ -8,11 +8,7 @@
   },
   "dependencies": {
       "express":"latest",
-      "socket.io":"latest",
       "sleep":"latest",
-      "lcd":"latest",
-      "querystring":"latest",
-      "fs": "1.0.0",
       "node-wit": "1.0.0"
   }
 }
